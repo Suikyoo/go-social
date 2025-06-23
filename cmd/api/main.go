@@ -2,17 +2,17 @@ package main
 
 import (
 	"log"
-	"os"
-	"example.com/social/internal/env"
+	"github.com/suikyoo/social/internal/env"
 )
 
 
 func main() {
 	conf := config{
-		addr: env,
+		addr: env.GetString("ADDR", ":8080"),
 	}
 	app := &application{
 		config: conf,
+
 	}
 
 	mux := app.mount()

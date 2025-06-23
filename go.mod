@@ -1,4 +1,4 @@
-module example.com/social
+module github.com/suikyoo/social
 
 go 1.24.1
 
