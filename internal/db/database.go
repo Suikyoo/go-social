@@ -3,7 +3,8 @@ package db
 import (
 	"database/sql"
 	"time"
-  _ "github.com/go-sql-driver/mysql"
+
+	_"github.com/jackc/pgx/v5/stdlib"
 )
 
 type Options struct {
@@ -26,6 +27,7 @@ func NewOptions() Options {
 }
 
 func New(dataSource string) (*sql.DB, error){
+
   options := NewOptions()
   db, err := NewWithOptions(dataSource, options)
   return db, err
@@ -33,7 +35,7 @@ func New(dataSource string) (*sql.DB, error){
 }
 
 func NewWithOptions(dataSource string, options Options) (*sql.DB, error){
-  db, err := sql.Open("mysql", dataSource)
+  db, err := sql.Open("pgx", dataSource)
 
   if err != nil {
     return nil, err
