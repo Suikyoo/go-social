@@ -8,18 +8,18 @@ services:
   #  ports:
   #    -3000:3000
 
-  backend:
-    image: social/backend:latest
-    container_name: go-backend
-    build: .
-    env_file: 
-      - .env
-    networks:
-      - back-tier
-    ports:
-      - 8080:8080
-    depends_on:
-      - migration
+  #backend:
+  #  image: social/backend:latest
+  #  container_name: go-backend
+  #  build: .
+  #  env_file: 
+  #    - .env
+  #  networks:
+  #    - back-tier
+  #  ports:
+  #    - 8080:8080
+  #  depends_on:
+  #    - migration
 
   database:
     image: postgres:16
@@ -32,6 +32,8 @@ services:
       - back-tier
     volumes:
       - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   migration:
     image: migrate/migrate
@@ -43,7 +45,7 @@ services:
       - -path
       - /migrations
       - -database
-      - ${DATABASE_SRC}
+      - ${DB_SRC}
       - up
     networks:
       - back-tier

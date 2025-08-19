@@ -83,8 +83,8 @@ func (r *SqlUserRepository) GetByUsername (ctx context.Context, username string)
 
 func (r *SqlUserRepository) Create(ctx context.Context, user *User) error {
   query := `
-  INSERT INTO users (username, email, password)
-  VALUES ($1, $2, $3)
+  INSERT INTO users (username, password)
+  VALUES ($1, $2)
   RETURNING id
   `
   

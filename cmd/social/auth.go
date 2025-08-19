@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -74,11 +75,13 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 	user, err := app.store.Users.GetByUsername(r.Context(), userPayload.Username)
 	//meaning, there is a result, (an account with the same username)
 	if err != nil {
-		http.Error(w, "No such user", http.StatusNoContent)
+		http.Error(w, "No such user", http.StatusConflict)
+    return
 	}
 
-	//if user is there
-
+  log.Println("I was here")
+  log.Printf("userpayloadusername is %s", userPayload.Username)
+	//if user is there,
 	//create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": strconv.FormatInt(user.ID, 10),

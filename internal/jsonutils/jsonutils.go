@@ -1,4 +1,4 @@
-//collection of json utility functions
+// collection of json utility functions
 package jsonutils
 
 import (
@@ -7,8 +7,8 @@ import (
 )
 
 func Read(w http.ResponseWriter, r *http.Request, data any) error{
-  maxBytes := 1_048_578
-  r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
+  //maxBytes := 1_048_578
+  //r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
 
   decoder := json.NewDecoder(r.Body)
   decoder.DisallowUnknownFields()

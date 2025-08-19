@@ -26,7 +26,7 @@ func main() {
 
 
   //database
-	db_conn_pool, err := db.New(env.GetString("DATABASE_SRC", ""))
+  db_conn_pool, err := db.New(env.GetString("DB_SRC", ""))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -41,6 +41,7 @@ func (app *application) Mount() http.Handler {
 	}))
 
 	r.Route("/posts", func(r chi.Router) {
+    r.Use(app.AuthTokenMiddleware)
 		r.Post("/", app.createPost)
 
 		r.Get("/", app.getPostFeed)
@@ -49,7 +50,7 @@ func (app *application) Mount() http.Handler {
 	})
 
 	r.Route("/users", func(r chi.Router) {
-
+    r.Use(app.AuthTokenMiddleware)
 		r.Get("/", app.getUserFeed)
 		r.Get("/{id}", app.getUser)
 
@@ -71,5 +72,6 @@ func (app *application) Run(handler http.Handler) {
 	}
 
   log.Printf("Server running at %s", srv.Addr)
+  log.Printf("code just got updated")
 	log.Fatal(srv.ListenAndServe())
 }
