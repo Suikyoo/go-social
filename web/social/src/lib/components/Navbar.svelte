@@ -15,10 +15,9 @@
 </nav>
 
 <style>
-
-  nav {
+nav {
     width: 100%;
-    height: 4em;
+    height: 4.3em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Preface from "./Preface.svelte";
+    import Card from "@components/Card.svelte";
 
   let feed: {title: string, color_var: string}[] = [
 {title: "title1", color_var: "--color-rose-200"},
@@ -7,26 +7,27 @@
 {title: "title3", color_var: "--color-amber-200"},
   ]
 </script>
-<div class="space">
 
-  <Preface width="100%" height="60vh" color_var="--color-slate-100">
-    <h1>So...</h1>
-  </Preface>
+<section class="space">
+
+  <Card width="100%" height="60vh" color_var="--color-slate-100">
+      <h3 class="preface">Why scroll through reels when you can analyze taylor series expansions in <span style="color: blue;">this</span> bad boy?</h3>
+  </Card>
 
   <div class="content">
 
     {#each feed as f}
-      <Preface color_var={f.color_var}>
+      <Card color_var={f.color_var}>
         <h1>{f.title}</h1>
-      </Preface>
+      </Card>
     {/each}
 
   </div>
 
-</div>
+</section>
 
 <style>
-  h1 {
+  .preface {
       color: var(--color-black);
     }
 
