@@ -35,22 +35,22 @@ services:
     ports:
       - 5432:5432
 
-  migration:
-    image: migrate/migrate
-    container_name: database-migration
-    volumes:
-      - ./cmd/migrate/migrations:/migrations
-    entrypoint:
-      - migrate
-      - -path
-      - /migrations
-      - -database
-      - ${DB_SRC}
-      - up
-    networks:
-      - back-tier
-    depends_on:
-      - database
+ #migration:
+ #  image: migrate/migrate
+ #  container_name: database-migration
+ #  volumes:
+ #    - ./cmd/migrate/migrations:/migrations
+ #  entrypoint:
+ #    - migrate
+ #    - -path
+ #    - /migrations
+ #    - -database
+ #    - ${DB_SRC}
+ #    - up
+ #  networks:
+ #    - back-tier
+ #  depends_on:
+ #    - database
 
 networks:
   front-tier:

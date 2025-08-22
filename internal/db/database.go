@@ -2,9 +2,10 @@ package db
 
 import (
 	"database/sql"
+	"log"
 	"time"
 
-	_"github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type Options struct {
@@ -35,6 +36,7 @@ func New(dataSource string) (*sql.DB, error){
 }
 
 func NewWithOptions(dataSource string, options Options) (*sql.DB, error){
+	log.Println(dataSource);
   db, err := sql.Open("pgx", dataSource)
 
   if err != nil {
