@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -42,13 +43,16 @@ func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
       } 
     }()
 
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
+    cookie, err := r.Cookie("social-auth-token")
+
+    if err != nil {
+      log.Println(err.Error())
       err = errors.New("User not authorized")
       return
-		}
+    }
 
-		parts := strings.Split(authHeader, " ")
+		parts := strings.Split(cookie.Value, " ")
+
 		if len(parts) != 2 || parts[0] != "Bearer" {
       err = errors.New("User not authorized")
       return

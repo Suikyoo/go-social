@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -58,6 +59,11 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 
+  _, err = w.Write([]byte("User successfully created"))
+  if err != nil {
+    log.Println("Response not sent", err.Error())
+  }
+
 }
 
 func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
@@ -96,6 +102,8 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+  //use cookies instead of a json response
+  /*
 	tokenPayload := SentTokenPayload{
 		Token:     jwtString,
 		Type:      "Bearer",
@@ -104,5 +112,28 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 
 	jsonutils.Write(w, tokenPayload)
 	//send the token back
+  */
+
+  cookie := http.Cookie{
+    Name: "social-auth-token",
+    Value: "Bearer " + jwtString,
+    Path: "/",
+
+    // MaxAge=0 means no 'Max-Age' attribute specified.
+    // MaxAge<0 means delete cookie now, equivalently 'Max-Age: 0'
+    // MaxAge>0 means Max-Age attribute present and given in seconds
+    MaxAge: 86400,
+    Secure: true,
+    HttpOnly: true,
+    SameSite: http.SameSiteLaxMode,
+
+  }
+  http.SetCookie(w, &cookie)
+	w.WriteHeader(http.StatusCreated)
+
+  _, err = w.Write([]byte("Token successfully created"))
+  if err != nil {
+    log.Println("Response not sent", err.Error())
+  }
 
 }
