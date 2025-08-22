@@ -3,13 +3,15 @@ package repository
 import (
 	"context"
 	"database/sql"
+
+	"github.com/Suikyoo/go-social/internal/authutils"
 )
 
 
 type User struct {
 	ID   int64  `json:"id"`
 	Username string `json:"username"`
-  Password []byte `json:"-"`
+  Password authutils.Password `json:"-"`
 }
 
 type UserRepository interface {
@@ -23,7 +25,7 @@ type SqlUserRepository struct {
 
 func (r *SqlUserRepository) Get(ctx context.Context, id int64) (*User, error) {
 	query := `
-  SELECT id, username
+  SELECT id, username, password
   FROM users
   WHERE id = $1
   `
@@ -40,9 +42,14 @@ func (r *SqlUserRepository) Get(ctx context.Context, id int64) (*User, error) {
   ).Scan(
     &user.ID,
     &user.Username,
+    &user.Password,
+
     //don't include the password on scan
     //although the password would be nil,
     //its json tag is "-" anyways so it won't get sent
+    
+    //update: nah, just include the password dawg
+    //deal with the aftermaths later
   )
 
   if err != nil {
@@ -55,7 +62,7 @@ func (r *SqlUserRepository) Get(ctx context.Context, id int64) (*User, error) {
 
 func (r *SqlUserRepository) GetByUsername (ctx context.Context, username string) (*User, error) {
   query := `
-  SELECT id, username
+  SELECT id, username, password
   FROM users
   WHERE username = $1
   `
@@ -71,6 +78,7 @@ func (r *SqlUserRepository) GetByUsername (ctx context.Context, username string)
   ).Scan(
     &user.ID,
     &user.Username,
+    &user.Password,
   )
 
   if err != nil {
@@ -95,7 +103,7 @@ func (r *SqlUserRepository) Create(ctx context.Context, user *User) error {
     ctx, 
     query,
     user.Username,
-    user.Password,
+    []byte(user.Password),
   ).Scan(
     &user.ID,
   )

@@ -91,6 +91,8 @@ func (r *SqlPostRepository) GetFeed(ctx context.Context, amt int8) ([]*Post, err
 	query := `
   SELECT posts.id, posts.user_id, users.username, posts.title, posts.content, posts.created_at, posts.updated_at
   FROM posts
+  INNER JOIN users
+  ON posts.user_id = users.id
   LIMIT $1
   `
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
@@ -101,11 +103,13 @@ func (r *SqlPostRepository) GetFeed(ctx context.Context, amt int8) ([]*Post, err
 		query,
 		amt,
 	)
-	defer rows.Close()
 
 	if err != nil {
 		return []*Post{}, err
 	}
+
+	defer rows.Close()
+
 
 	postFeed := make([]*Post, 0)
 

@@ -1,31 +1,26 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/Suikyoo/go-social/internal/authutils"
 	"github.com/Suikyoo/go-social/internal/jsonutils"
 	"github.com/Suikyoo/go-social/internal/repository"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type password []byte
+//changed my mind I should probably make something like an independent auth internal package huhu
 
-func (p *password) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-	*p = []byte(s)
-	return nil
-}
+//ok, made an authutils package just to
+//decouple the password type along with its methods
+
 
 type ReceivedUserPayload struct {
 	Username string   `json:"name"`
-	Password password `json:"password"`
+	Password authutils.Password `json:"password"`
 }
 
 type SentTokenPayload struct {
@@ -58,6 +53,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	err = app.store.Users.Create(r.Context(), &user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+    return 
 	}
 
 	w.WriteHeader(http.StatusCreated)
@@ -79,9 +75,14 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
     return
 	}
 
-  log.Println("I was here")
-  log.Printf("userpayloadusername is %s", userPayload.Username)
 	//if user is there,
+
+  //if database user's password, is the same as the sent user's password,
+  if !user.Password.Compare(&userPayload.Password){
+    http.Error(w, "Wrong password", http.StatusUnauthorized)
+    return
+  }
+
 	//create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": strconv.FormatInt(user.ID, 10),
@@ -91,8 +92,10 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 	jwtString, err := token.SignedString(app.config.auth.jwtSecret)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+    return 
 
 	}
+
 	tokenPayload := SentTokenPayload{
 		Token:     jwtString,
 		Type:      "Bearer",
