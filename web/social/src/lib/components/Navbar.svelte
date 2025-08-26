@@ -4,11 +4,12 @@
 
 
 <nav>
-  <div class="title">
-    <h2>solu<span>Shown</span></h2>
+  <div class="left">
+    <h2>I<span>dunno</span></h2>
+    <input class="search" type="text">
   </div>
 
-  <div class="profile">
+  <div class="right">
     <Profile/>
   </div>
 
@@ -32,15 +33,29 @@ nav {
     font-style: italic;
   }
 
-  .title {
-    padding-left: 20px;
+  .left {
+    margin-left: 20px;
     font-weight: 200;
+    display: flex;
+    flex-direction: col;
+    justify-content: space-between;
+    align-items: center;
 
   }
 
-  .profile {
+  .right {
     display: flex;
     padding-right: 20px;
+  }
+
+  .search {
+    width: 8em;
+    height: 1.5em;
+    color: black;
+    box-sizing: border-box;
+    padding-left: 1em;
+    padding-right: 1em;
+    
   }
 
 

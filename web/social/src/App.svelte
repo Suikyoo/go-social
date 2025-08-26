@@ -1,7 +1,6 @@
 <script lang="ts">
 
   import Router from 'svelte-spa-router';
-  import { SetAuthContext } from "@lib/auth/auth";
   import { routes } from "@lib/routes/route"
 
   import Navbar from "@components/Navbar.svelte"
@@ -13,44 +12,20 @@
 
 </script>
 
-<main>
+<main class="flex flex-col w-screen h-screen overflow-hidden">
 
   <div>
     <Navbar/>
   </div>
 
-  <div class="main_section">
+  <div class="flex flex-row justify-start flex-1">
 
     <Sidebar/>
 
-    <div class="content">
+    <div class="w-full rounded-tl-xl overflow-hidden">
         <Router {routes}/>
     </div>
 
   </div>
 
 </main>
-
-<style>
-  main {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .main_section {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    flex: 1;
-  }
-
-  .content {
-    width: 100%;
-    border-top-left-radius: 3em;
-    overflow: hidden;
-  }
-
-</style>

@@ -1,6 +1,8 @@
 include .env
 
 SHELL:=/bin/bash
+BACKEND_PATH:=./cmd/social
+FRONTEND_PATH:=./web/social
 
 .PHONY: migrate
 migrate:
@@ -8,5 +10,9 @@ migrate:
 
 .PHONY: backend
 backend:
-	go run ./cmd/social
+	go run $(BACKEND_PATH)
+
+.PHONY: frontend
+frontend:
+	cd $(FRONTEND_PATH) && npm install && npm run dev
 

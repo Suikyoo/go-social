@@ -8,7 +8,7 @@
   ]
 </script>
 
-<section class="space">
+<section class="bg-white h-[60%] overflow-y-scroll">
 
   <Card width="100%" height="60vh" color_var="--color-slate-100">
       <h3 class="preface">Why scroll through reels when you can analyze taylor series expansions in <span style="color: blue;">this</span> bad boy?</h3>
