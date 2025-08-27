@@ -1,4 +1,3 @@
-
 <script lang="ts">
   import { SetAuthContext, GetAuthContext } from "../auth/auth"
   import CircleUser from "lucide-svelte/icons/circle-user";

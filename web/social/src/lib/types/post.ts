@@ -5,8 +5,8 @@ export interface Post {
   content: string;
   username: string;
   user_id: string;
-  create_at: Date;
-  updated_at: Date;
+  created_at: string; //timestamps can't be parsed directly into Date types in typescript.
+  updated_at: string; //you must call new Date(timestamp: string)
 }
 
 export async function fetchPostFeed (): Promise<Post[]> {

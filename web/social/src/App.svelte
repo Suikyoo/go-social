@@ -5,6 +5,7 @@
 
   import Navbar from "@components/Navbar.svelte"
   import Sidebar from "@components/Sidebar.svelte";
+  import Login from './lib/components/Login.svelte';
 
 
   //seed. next time, try to fetch for the auth in the login page and then create the context
@@ -20,9 +21,10 @@
 
   <div class="flex w-screen flex-col-reverse flex-1 overflow-hidden lg:flex-row">
 
+    <Login/>
     <Sidebar/>
     <div class="w-full h-full overflow-hidden rounded-tl-xl">
-      <Router {routes}/>
+      <Router { routes }></Router>
     </div>
 
   </div>
