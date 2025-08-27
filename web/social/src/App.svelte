@@ -12,18 +12,17 @@
 
 </script>
 
-<main class="flex flex-col w-screen h-screen overflow-hidden">
+<main class="flex flex-col w-screen h-screen justify-start">
 
   <div>
     <Navbar/>
   </div>
 
-  <div class="flex flex-row justify-start flex-1">
+  <div class="flex w-screen flex-col-reverse flex-1 overflow-hidden lg:flex-row">
 
     <Sidebar/>
-
-    <div class="w-full rounded-tl-xl overflow-hidden">
-        <Router {routes}/>
+    <div class="w-full h-full overflow-hidden rounded-tl-xl">
+      <Router {routes}/>
     </div>
 
   </div>

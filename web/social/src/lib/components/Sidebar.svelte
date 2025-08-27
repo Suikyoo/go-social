@@ -6,35 +6,21 @@
 
 </script>
 
-<nav>
-  <div>
+<nav class="flex flex-row w-full lg:w-20 justify-evenly lg:justify-start lg:h-full lg:flex-col">
+  <div class="p-5">
   <Search strokeWidth={1.75} />
   </div>
 
-  <div>
+  <div class="p-5">
   <House strokeWidth={1.75} />
   </div>
 
-  <div>
+    <div class="p-5">
   <SquareLibrary strokeWidth={1.75} />
   </div>
 
-  <div>
+    <div class="p-5">
   <CirclePlus strokeWidth={1.75} />
   </div>
 
 </nav>
-
-<style>
-  nav {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-  }
-
-  nav * {
-    padding: 15px;
-    padding-right: 2em;
-  }
-</style>

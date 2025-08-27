@@ -1,25 +1,32 @@
 <script lang="ts">
-    import Card from "@components/Card.svelte";
+  import { onMount } from "svelte";
+  import { type Post, fetchPostFeed } from "@lib/types/post";
 
-  let feed: {title: string, color_var: string}[] = [
-{title: "title1", color_var: "--color-rose-200"},
-{title: "title2", color_var: "--color-cyan-200"},
-{title: "title3", color_var: "--color-amber-200"},
-  ]
+  let feed: Post[] = [];
+
+  const maxContentLength = 10;
+
+  onMount(async() => {
+    feed = await fetchPostFeed();
+  });
+
 </script>
 
-<section class="bg-white h-[60%] overflow-y-scroll">
+<section class="items-center w-full h-full overflow-y-scroll">
 
-  <Card width="100%" height="60vh" color_var="--color-slate-100">
-      <h3 class="preface">Why scroll through reels when you can analyze taylor series expansions in <span style="color: blue;">this</span> bad boy?</h3>
-  </Card>
+  <div class="flex w-[90vw] h-2/3 bg-slate-300 rounded-xl place-items-center">
+      <h3 class="font-bold text-slate-950">Why scroll through reels when you can analyze taylor series expansions in <span class="text-red-800">this</span> bad boy?</h3>
+  </div>
 
-  <div class="content">
+  <div class="flex flex-col justify-start p-5 mt-5 box-border">
 
     {#each feed as f}
-      <Card color_var={f.color_var}>
-        <h1>{f.title}</h1>
-      </Card>
+      <div class="flex flex-col items-start justify-center w-full p-5 mb-5 rounded-xl bg-slate-100 box-border">
+        <p class="text-left text-slate-800">{f.username}</p>
+        <h2 class="font-bold text-slate-800">{f.title}</h2>
+        <p class="text-slate-500">{f.content.length <= maxContentLength ? f.content : f.content.substring(0, maxContentLength) + '...'}</p>
+                  
+      </div>
     {/each}
 
   </div>

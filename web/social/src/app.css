@@ -29,6 +29,7 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
+  overflow-y: hidden;
 }
 
 h1 {
@@ -76,10 +77,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
-
-input {
-  background-color: var(--color-slate-100);
-  border: none;
-  
 }

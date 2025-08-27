@@ -41,12 +41,15 @@ func (app *application) Mount() http.Handler {
 	}))
 
 	r.Route("/posts", func(r chi.Router) {
-    r.Use(app.AuthTokenMiddleware)
-		r.Post("/", app.createPost)
+		//disable auth middleware for getters for now
 
 		r.Get("/", app.getPostFeed)
 		r.Get("/{id}", app.getPost)
 
+		r.Route("/", func(r chi.Router) {
+			r.Use(app.AuthTokenMiddleware)
+			r.Post("/", app.createPost)
+		})
 	})
 
 	r.Route("/users", func(r chi.Router) {

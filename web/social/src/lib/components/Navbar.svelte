@@ -3,60 +3,14 @@
 </script>
 
 
-<nav>
-  <div class="left">
+<nav class="flex flex-row justify-between w-full px-5 h-18 box-border">
+  <div class="flex flex-row items-center">
     <h2>I<span>dunno</span></h2>
-    <input class="search" type="text">
+    <input class="flex px-3 mx-10 text-sm bg-transparent min-w-20 rounded-xs outline-2 outline-offset-5 text-slate-100 box-border" type="text">
   </div>
 
-  <div class="right">
+  <div class="flex place-items-center">
     <Profile/>
   </div>
 
 </nav>
-
-<style>
-nav {
-    width: 100%;
-    height: 4.3em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
-  span {
-    color: var(--color-yellow-200);
-    font-weight: 900;
-    font-style: italic;
-  }
-
-  .left {
-    margin-left: 20px;
-    font-weight: 200;
-    display: flex;
-    flex-direction: col;
-    justify-content: space-between;
-    align-items: center;
-
-  }
-
-  .right {
-    display: flex;
-    padding-right: 20px;
-  }
-
-  .search {
-    width: 8em;
-    height: 1.5em;
-    color: black;
-    box-sizing: border-box;
-    padding-left: 1em;
-    padding-right: 1em;
-    
-  }
-
-
-</style>
