@@ -1,23 +1,35 @@
 <script lang="ts">
-  import { SetAuthContext, GetAuthContext } from "../auth/auth"
-  import CircleUser from "lucide-svelte/icons/circle-user";
-  import { Key } from "lucide-svelte";
+  import { authForm } from "@lib/auth/auth.svelte"
+  import { type User } from "@lib/types/user"
 
-  const user = GetAuthContext(); 
-
-  function seededLogin() {
-    SetAuthContext({id: BigInt(0), name: "test_user", src: "https://cdn.britannica.com/08/190808-050-CB26C47B/The-Powerpuff-Girls-Bubbles-Blossom-Buttercup.jpg"});
-  }
+  
 
 </script>
 
-{#if $user !== undefined} 
-    <div>
-        <p>{$user.name}</p>
-        <img src={$user.src} alt="user {$user.name}"/>
+<script module>
+  interface UserProfile extends User {
+
+    clear(): void;
+
+  }
+  const userProfile: UserProfile = $state({
+    username: "",
+    clear() {
+      this.username = "";
+    }
+  });
+  export { userProfile };
+
+</script>
+
+{#if userProfile.username.length != 0}
+    <div class="flex flex-row">
+      <button onclick={() => userProfile.clear()}>Log out</button>
+      <p>{userProfile.username}</p>
+        <!-- add image -->
     </div>
 {:else}
-    <button onclick={seededLogin}>Login</button>
+  <button onclick={() => authForm.setVisible("login")}>Login</button>
 {/if}
 
     

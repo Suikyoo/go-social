@@ -29,35 +29,10 @@
           <p class="text-zinc-400 text-right">{f.created_at}</p>
 
         </div>
-                  
+
       </div>
     {/each}
 
   </div>
 
 </section>
-
-<style>
-  .preface {
-      color: var(--color-black);
-    }
-
-    .space {
-      height: calc(100vh - 4em - 10px);
-      overflow-y: scroll;
-      box-sizing: border-box;
-      padding: 2em;
-      flex: 1;
-    }
-
-    .content {
-      display: grid;
-      margin-top: 3em;
-      grid-template-columns: auto auto;
-      row-gap: 1em;
-      column-gap: 1em;
-      box-sizing: border-box;
-      padding: 1em;
-      height: 100vh;
-    }
-</style>
