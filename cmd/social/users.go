@@ -8,12 +8,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type GetUserPayload struct {
-	Name string `json:"name"`
-  Username string `json:"username"`
-}
-
-
 func (app *application) getUser(w http.ResponseWriter, r *http.Request) {
   idKey := chi.URLParam(r, "id")
   id, err := strconv.Atoi(idKey)

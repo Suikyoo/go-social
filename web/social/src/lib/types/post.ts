@@ -11,13 +11,10 @@ export interface Post {
 
 export async function fetchPostFeed (): Promise<Post[]> {
   try {
-    console.log("hi")
-    console.log(apiUrl)
     let res = await fetch(apiUrl + "/posts");
-    console.log(res)
     if (!res.ok) {
-      let text = await res.text();
-      throw new Error(`${res.status}: ${text}`);
+      let content = await res.text();
+      throw new Error(`${res.status}: ${content}`);
 
     }
     return await res.json();

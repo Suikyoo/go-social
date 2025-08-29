@@ -20,7 +20,7 @@ import (
 
 
 type ReceivedUserPayload struct {
-	Username string   `json:"name"`
+	Username string   `json:"username"`
 	Password authutils.Password `json:"password"`
 }
 
