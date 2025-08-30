@@ -12,7 +12,7 @@
 
 </script>
 
-<section class="flex flex-col items-center w-full h-full overflow-y-scroll">
+<section class="flex flex-col items-center w-full h-full overflow-y-scroll bg-inherit">
 
   <div class="flex w-[90vw] h-2/3 bg-zinc-300 rounded-xl items-center justify-center box-border p-10">
       <h3 class="font-bold text-zinc-950">Why scroll through reels when you can analyze taylor series expansions in <span class="text-red-800">this</span> bad boy?</h3>

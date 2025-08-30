@@ -3,6 +3,8 @@
   import { authForm } from '@lib/auth/auth.svelte'
   import { userProfile } from '@components/Profile.svelte';
 
+  import Input from '@components/Input.svelte';
+
 //careful with this, the snippet defined below actually makes use of its naming convention 
 //to access the 'username' and 'password' values from the
 //"Username" and "Password" text label
@@ -30,28 +32,24 @@
 </script>
 
 {#if authForm.isVisible("login")}
-{#snippet input_field(v: string, t: string)}
-  <label class="flex flex-col items-start my-2">
-    <p class="text-sm my-1">{v}</p>
-
-    <input type={t} name={v.toLowerCase()} class="border-zinc-200 border-b-2 mx-5 rounded" bind:value={() => user[v.toLowerCase()], (value) => {user[v.toLowerCase()] = value}}/>
-  </label>
-
-{/snippet}
-
 
 <div class="flex flex-col w-80 h-100 absolute m-auto inset-24 bg-zinc-800 box-border p-5 rounded-xl shadows-2xl shadow-2xl">
   <button class="w-[2em] self-end place-items-center " onclick={() => authForm.setHidden()}>x</button>
-  <form onsubmit={(e) => { e.preventDefault(); login()}}>
+  <form class="bg-inherit" onsubmit={(e) => { e.preventDefault(); login()}}>
 
     <h1 class="text-xl mb-2">Log in</h1>
 
-    <div class="box-border px-7 pt-4">
+    <div class="box-border px-7 pt-4 bg-inherit">
+
+      <Input name="Username" type="text" bind:value={user.username}/>
+      <Input name="Password" type="password" bind:value={user.password}/>
+        <!--
       {@render input_field('Username', 'text')}
       {@render input_field('Password', 'password')}
+        -->
     </div>
 
-    <input class="w-full bg-blue-600 rounded-sm mt-10 my-5" type="submit" value="log in"/>
+    <button class="w-full bg-blue-600 rounded-sm mt-10 my-5"> login </button>
     <p bind:this={feedback}></p>
 
     <p>Don't have an account?</p>
