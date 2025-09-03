@@ -14,18 +14,18 @@
 
 </script>
 
-<main class="flex flex-col w-screen h-screen justify-start">
+<main class="flex flex-col w-screen h-screen justify-start overflow-hidden">
 
   <div>
     <Navbar/>
   </div>
 
-  <div class="flex w-screen flex-col-reverse flex-1 overflow-hidden lg:flex-row">
+  <div class="flex w-screen flex-col-reverse flex-1 overflow-y-hidden lg:flex-row">
 
     <Login/>
     <Signup/>
     <Sidebar/>
-    <div class="w-full h-full overflow-hidden rounded-tl-xl">
+    <div class="w-full h-full overflow-hidden rounded-tl-xl bg-zinc-950">
       <Router { routes }></Router>
     </div>
 

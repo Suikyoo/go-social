@@ -1,11 +1,15 @@
 <script lang="ts">
-  let {name = "", value = $bindable(""), ...props} = $props();
+  let {className = "", name = "", value = $bindable(""), ...props} = $props();
 
 </script>
 
-<label class="flex flex-col size-full items-start bg-inherit">
+<label for="textarea" class={`flex flex-col items-start bg-inherit ${className}`}>
   <p class="select-none">{name}</p>
-  <textarea {...props} {name} bind:value class="rounded-sm border-[1px] border-slate-100 h-[2em] box-border px-5 py-4" minlength=1 required></textarea>
+  <!--className should be solely for label 
+    since setting them both for parent and child 
+    especially for relative sizing would mess things up
+    -->
+    <textarea {...props} {name} bind:value class={`rounded-sm border-[1px] border-slate-100 h-full w-full box-border px-4`} minlength=1 required></textarea>
 </label>
 
 <style>

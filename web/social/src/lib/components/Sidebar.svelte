@@ -1,5 +1,7 @@
 <script lang="ts">
   import {House} from "@lucide/svelte";
+  import {Plus} from "@lucide/svelte";
+
   import {type Icon as IconType} from "@lucide/svelte";
 
 
@@ -12,9 +14,15 @@
   const menuItems: MenuItem[] = [
     {
       name: "Home",
-      href: "/",
+      href: "#/",
       icon: House,
+    },
+    {
+      name: "Create",
+      href: "#/posts/create",
+      icon: Plus,
     }
+
   ]
 
 </script>
@@ -25,7 +33,9 @@
   {#each menuItems as item}
     {@const Icon = item.icon}
     <div class="p-5">
-      <Icon strokeWidth={1.75} />
+      <a href={item.href}>
+        <Icon strokeWidth={1.75}/>
+      </a>
     </div>
   {/each}
 

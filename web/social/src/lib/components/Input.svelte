@@ -1,11 +1,11 @@
 <script lang="ts">
-  let {name = "", value = $bindable(""), ...props} = $props();
+  let {parentClass = "", className = "", name = "", value = $bindable(""), ...props} = $props();
 
 </script>
 
-<label class="flex flex-col items-start bg-inherit">
+<label class={`flex flex-col items-start bg-inherit ${className}`}>
   <p class="select-none">{name}</p>
-  <input {...props} {name} bind:value class="rounded-sm border-[1px] border-slate-100 h-[2em] box-border px-5 py-4" minlength=1 required/>
+  <input {...props} {name} bind:value class={`rounded-sm border-[1px] border-slate-100 h-full w-full box-border px-4`} minlength=1 required/>
 </label>
 
 <style>
