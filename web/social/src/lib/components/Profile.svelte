@@ -23,8 +23,9 @@
 </script>
 
 {#if userProfile.username.length != 0}
-    <div class="flex flex-row">
+    <div class="flex flex-row justify-between">
       <button onclick={() => userProfile.clear()}>Log out</button>
+      |
       <p>{userProfile.username}</p>
         <!-- add image -->
     </div>

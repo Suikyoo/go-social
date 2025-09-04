@@ -22,6 +22,9 @@ func main() {
       tokenExpiry: 3600,
 
     },
+		frontend: frontendConfig{
+			addr: env.GetString("FRONTEND_SRC", "http://localhost:5173"),
+		},
 	}
 
 

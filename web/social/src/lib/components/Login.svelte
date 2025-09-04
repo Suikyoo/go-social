@@ -14,10 +14,10 @@
   let feedback: HTMLParagraphElement | null = $state(null);
 
   async function login() {
-    let res = await authenticateUser(user);
+    let err = await authenticateUser(user);
 
-    if (!res.ok) {
-      feedback.innerText = await res.text();
+    if (err) {
+      feedback.innerText = err.message;
       feedback.style.color = "red"
     }
     else {
@@ -41,8 +41,8 @@
 
     <div class="box-border px-7 pt-4 bg-inherit">
 
-      <Input name="Username" type="text" bind:value={user.username}/>
-      <Input name="Password" type="password" bind:value={user.password}/>
+      <Input name="Username" type="text" bind:value={user.username} className="h-[3.7em]"/>
+      <Input name="Password" type="password" bind:value={user.password} className="h-[3.7em]"/>
         <!--
       {@render input_field('Username', 'text')}
       {@render input_field('Password', 'password')}

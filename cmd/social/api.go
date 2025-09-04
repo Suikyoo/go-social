@@ -13,10 +13,15 @@ import (
 type config struct {
   server serverConfig
   auth authConfig
+	frontend frontendConfig
 }
 
 type serverConfig struct {
   addr string
+}
+
+type frontendConfig struct {
+	addr string
 }
 
 type authConfig struct {
@@ -32,24 +37,22 @@ type application struct {
 func (app *application) Mount() http.Handler {
 	r := chi.NewRouter()
 
-	r.Use(middleware.Logger)
-
 	r.Use(cors.Handler(cors.Options{
 		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins: []string{app.config.frontend.addr},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowCredentials: true,
 	}))
+
+	r.Use(middleware.Logger)
 
 	r.Route("/posts", func(r chi.Router) {
 		//disable auth middleware for getters for now
 
+		r.Use(app.AuthTokenMiddleware)
 		r.Get("/", app.getPostFeed)
 		r.Get("/{id}", app.getPost)
-
-		r.Route("/", func(r chi.Router) {
-			r.Use(app.AuthTokenMiddleware)
-			r.Post("/", app.createPost)
-		})
+		r.Post("/", app.createPost)
 	})
 
 	r.Route("/users", func(r chi.Router) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  let {parentClass = "", className = "", name = "", value = $bindable(""), ...props} = $props();
+  let {className = "", name = "", value = $bindable(""), ...props} = $props();
 
 </script>
 

@@ -1,5 +1,5 @@
-import { apiUrl }  from "@lib/env/env"
 
+import { fetchPostFunct } from "@lib/fetch/fetch"; 
 export interface User {
   id?: string;
   username: string;
@@ -7,25 +7,29 @@ export interface User {
   src?: string;
 }
 
-function postFunct(url: string): (user: User) => Promise<Response> {
-  return async (user: User) => { 
-    try {
-      return await fetch(apiUrl + url, {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      });
-    }
-    catch (e) {
-      throw new Error(e);
-    }
-  }
 
-  
+export async function authenticateUser(user: User): Promise<Error> | null {
+  const func = fetchPostFunct<User>("/auth/token");
+  let res = await func(user);
+
+  if (res.ok) {
+    return null;
+  }
+  let content = await res.text();
+
+  return new Error(content);
 }
 
-export const authenticateUser = postFunct("/auth/token");
-export const createUser = postFunct("/auth/user");
+export async function createUser(user: User): Promise<Error> | null {
+  const func = fetchPostFunct<User>("/auth/user");
+  let res = await func(user);
+
+  if (res.ok) {
+    return null;
+  }
+
+  let content = await res.text();
+
+  return new Error(content);
+
+}

@@ -1,13 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { type Post, fetchPostFeed } from "@lib/types/post";
+  import { userProfile } from "../components/Profile.svelte";
 
-  let feed: Post[] = [];
+  let feed: Post[] = $state([]);
 
   const maxContentLength = 10;
 
-  onMount(async() => {
-    feed = await fetchPostFeed();
+  $effect(() => {
+    if (userProfile.username) {
+      fetchPostFeed().then((value) => {feed = value});
+    }
   });
 
 </script>
