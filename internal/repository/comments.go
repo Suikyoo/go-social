@@ -18,14 +18,14 @@ type Comment struct {
 }
 
 type CommentRepository interface {
-  RegularRepository[Comment]
+  FeedRepository[Comment]
+  CreateRepository[Comment]
 }
 
 type SqlCommentRepository struct {
   db *sql.DB
 }
 
-  /*
 func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]Comment, error) {
   query := `
   SELECT users.username, users.id, posts.id, comments.id, comments.content, comments.created_at, comments.updated_at
@@ -42,6 +42,31 @@ func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]Comment
     query,
     amt,
   )
+  if err != nil {
+    return []Comment{}, err
+  }
+
+  comments := make([]Comment, 0)
+
+  for rows.Next() {
+    comment := Comment{}
+    err = rows.Scan(
+      &comment.Username,
+      &comment.UserID,
+      &comment.PostID,
+      &comment.ID,
+      &comment.Content,
+      &comment.CreatedAt,
+      &comment.UpdatedAt,
+    )
+
+    if err != nil {
+      return []Comment{}, err
+    }
+    comments = append(comments, comment)
+  }
+
+  return comments, nil
+  
 
 }
-  */
