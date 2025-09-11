@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Suikyoo/go-social/internal/authutils"
 )
@@ -22,6 +23,8 @@ type UserRepository interface {
 type SqlUserRepository struct {
 	db *sql.DB
 }
+
+type TestUserRepository struct {}
 
 func (r *SqlUserRepository) Get(ctx context.Context, id int64) (*User, error) {
 	query := `
@@ -149,4 +152,24 @@ func (r *SqlUserRepository) GetFeed(ctx context.Context, amt int8) ([]*User, err
 	}
 	return userFeed, nil
 
+}
+
+func (r *TestUserRepository) Create(ctx context.Context, user *User) error {
+	log.Print("user created")
+	return nil
+}
+
+func (r *TestUserRepository) Get(ctx context.Context, id int64) (*User, error) {
+	log.Print("user fetched")
+	return &User{}, nil
+
+}
+
+func (r *TestUserRepository) GetFeed(ctx context.Context, amt int8) ([]*User, error) {
+	log.Print("users fetched")
+	return append(make([]*User, 0), &User{}), nil
+}
+func (r *TestUserRepository) GetByUsername(ctx context.Context, username string) (*User, error) {
+	log.Print("user fetched by username")
+	return &User{}, nil
 }

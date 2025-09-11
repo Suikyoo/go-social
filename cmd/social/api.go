@@ -47,12 +47,18 @@ func (app *application) Mount() http.Handler {
 	r.Use(middleware.Logger)
 
 	r.Route("/posts", func(r chi.Router) {
-		//disable auth middleware for getters for now
 
 		r.Use(app.AuthTokenMiddleware)
+
 		r.Get("/", app.getPostFeed)
 		r.Get("/{id}", app.getPost)
 		r.Post("/", app.createPost)
+	})
+
+	r.Route("/comments", func(r chi.Router) {
+		r.Get("/", app.getCommentFeed)
+		r.Post("/{postID}", app.createComment)
+
 	})
 
 	r.Route("/users", func(r chi.Router) {
@@ -80,4 +86,5 @@ func (app *application) Run(handler http.Handler) {
   log.Printf("Server running at %s", srv.Addr)
   log.Printf("code just got updated")
 	log.Fatal(srv.ListenAndServe())
+	log.Printf("ehehe")
 }

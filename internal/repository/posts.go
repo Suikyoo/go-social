@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"log"
 	"time"
 )
 
@@ -22,6 +23,9 @@ type PostRepository interface {
 
 type SqlPostRepository struct {
 	db *sql.DB
+}
+
+type TestPostRepository struct {
 }
 
 func (r *SqlPostRepository) Create(ctx context.Context, post *Post) error {
@@ -136,4 +140,20 @@ func (r *SqlPostRepository) GetFeed(ctx context.Context, amt int8) ([]*Post, err
 
 	return postFeed, nil
 
+}
+
+func (r *TestPostRepository) Create(ctx context.Context, post *Post) error {
+	log.Print("post created")
+	return nil
+}
+
+func (r *TestPostRepository) Get(ctx context.Context, id int64) (*Post, error) {
+	log.Print("post fetched")
+	return &Post{}, nil
+
+}
+
+func (r *TestPostRepository) GetFeed(ctx context.Context, amt int8) ([]*Post, error) {
+	log.Print("posts fetched")
+	return append(make([]*Post, 0), &Post{}), nil
 }

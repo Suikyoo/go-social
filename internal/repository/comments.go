@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"log"
 	"time"
 )
 
@@ -26,7 +27,9 @@ type SqlCommentRepository struct {
   db *sql.DB
 }
 
-func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]Comment, error) {
+type TestCommentRepository struct {}
+
+func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Comment, error) {
   query := `
   SELECT users.username, users.id, posts.id, comments.id, comments.content, comments.created_at, comments.updated_at
   FROM comments
@@ -43,10 +46,10 @@ func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]Comment
     amt,
   )
   if err != nil {
-    return []Comment{}, err
+    return []*Comment{}, err
   }
 
-  comments := make([]Comment, 0)
+  comments := make([]*Comment, 0)
 
   for rows.Next() {
     comment := Comment{}
@@ -61,12 +64,59 @@ func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]Comment
     )
 
     if err != nil {
-      return []Comment{}, err
+      return []*Comment{}, err
     }
-    comments = append(comments, comment)
+    comments = append(comments, &comment)
   }
 
   return comments, nil
   
 
+}
+
+func (r *SqlCommentRepository) Create(ctx context.Context, comment *Comment) error {
+	query := `
+	INSERT INTO comments (post_id, user_id, content)
+	VALUES ($1, $2, $3)
+	RETURNING id, username, created_at, updated_at, likes
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	err := r.db.QueryRowContext(
+		ctx, 
+		query,
+		comment.PostID,
+		comment.UserID,
+		comment.Content,
+	).Scan(
+		&comment.ID,
+		&comment.Username,
+		&comment.CreatedAt,
+		&comment.UpdatedAt,
+		&comment.Likes,
+	)
+
+	if err != nil {
+		return err
+	}
+	
+	return nil
+}
+
+func (r *TestCommentRepository) Create(ctx context.Context, comment *Comment) error {
+	log.Print("comment created")
+	return nil
+}
+
+func (r *TestCommentRepository) Get(ctx context.Context, id int64) (*Comment, error) {
+	log.Print("comment fetched")
+	return &Comment{}, nil
+
+}
+
+func (r *TestCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Comment, error) {
+	log.Print("comments fetched")
+	return append(make([]*Comment, 0), &Comment{}), nil
 }
