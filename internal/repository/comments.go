@@ -68,7 +68,6 @@ func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Commen
     }
     comments = append(comments, &comment)
   }
-
   return comments, nil
   
 

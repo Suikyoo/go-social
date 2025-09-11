@@ -12,7 +12,6 @@ type createCommentPayload struct {
 	Content string `json:"content"`;
 }
 func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
-
 	payload := createCommentPayload{}
 	err := jsonutils.Read(w, r, &payload)
 	if err != nil {
