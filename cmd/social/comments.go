@@ -14,6 +14,7 @@ type createCommentPayload struct {
 func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 	payload := createCommentPayload{}
 	err := jsonutils.Read(w, r, &payload)
+
 	if err != nil {
 		http.Error(w, "Invalid Payload", http.StatusNotAcceptable)
 		return
@@ -28,10 +29,19 @@ func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-
-	comment := repository.Comment{Content: payload.Content, UserID: ctxValue.UserID, PostID: int64(postID)}
+	comment := repository.Comment{
+		Content: payload.Content, 
+		UserID: ctxValue.UserID, 
+		PostID: int64(postID),
+	}
 	//repository function create comment
-	app.store.Comments.Create(r.Context(), &comment)
+	err = app.store.Comments.Create(r.Context(), &comment)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
 
 }
 

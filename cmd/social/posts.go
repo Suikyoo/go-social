@@ -32,7 +32,6 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
 
   //fill in data for postpayload item
   payload := CreatePostPayload{}
-
   err := jsonutils.Read(w, r, &payload)
 
   if err != nil {

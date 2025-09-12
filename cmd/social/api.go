@@ -65,6 +65,7 @@ func (app *application) Mount() http.Handler {
 
 	r.Route("/users", func(r chi.Router) {
     r.Use(app.AuthTokenMiddleware)
+
 		r.Get("/", app.getUserFeed)
 		r.Get("/{id}", app.getUser)
 

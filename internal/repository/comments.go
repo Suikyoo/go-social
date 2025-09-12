@@ -75,9 +75,14 @@ func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Commen
 
 func (r *SqlCommentRepository) Create(ctx context.Context, comment *Comment) error {
 	query := `
-	INSERT INTO comments (post_id, user_id, content)
-	VALUES ($1, $2, $3)
-	RETURNING id, username, created_at, updated_at, likes
+	WITH inserted AS (
+		INSERT INTO comments (post_id, user_id, content)
+		VALUES ($1, $2, $3)
+		RETURNING id, user_id, created_at, updated_at, likes
+	)
+	SELECT inserted.id, username, created_at, updated_at, likes
+	FROM inserted
+	INNER JOIN users on inserted.user_id = users.id
 	`
 
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
