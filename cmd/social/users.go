@@ -13,23 +13,28 @@ func (app *application) getUser(w http.ResponseWriter, r *http.Request) {
   id, err := strconv.Atoi(idKey)
 
   if err != nil {
-    http.Error(w, "Invalid ID", http.StatusBadRequest)
+		RequestError(w, "Invalid ID")
+		return
   }
 
   user, err := app.store.Users.Get(r.Context(), int64(id))
   if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
+		DBError(w)
+		return
   }
 
   jsonutils.Write(w, user)
+
+
 
 }
 
 func (app *application) getUserFeed(w http.ResponseWriter, r *http.Request) {
   var feedAmt int8 = 20
   feed, err := app.store.Users.GetFeed(r.Context(), feedAmt)
+
   if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
+		DBError(w)
     return
   }
 

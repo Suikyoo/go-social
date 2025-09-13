@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -33,63 +32,60 @@ func (ct *authContextKeyType) Get(ctx context.Context) (authContextValue, error)
 var authContextKey authContextKeyType
 
 func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
 
-    var err error
+			var err error
 
-    defer func() {
-      if err != nil {
-        http.Error(w, err.Error(), http.StatusUnauthorized)
-      } 
-    }()
+			cookie, err := r.Cookie("social-auth-token")
 
-    cookie, err := r.Cookie("social-auth-token")
+			if err != nil {
+				AuthError(w)
+				return
+			}
 
-    if err != nil {
-      log.Println(err.Error())
-      err = errors.New("User not authorized")
-      return
-    }
+			parts := strings.Split(cookie.Value, " ")
 
-		parts := strings.Split(cookie.Value, " ")
+			if len(parts) != 2 || parts[0] != "Bearer" {
+				AuthError(w)
+				return
+			}
 
-		if len(parts) != 2 || parts[0] != "Bearer" {
-      err = errors.New("User not authorized")
-      return
+			//do some verification with the parts[1] aka the jwt string token
+			token, err := jwt.Parse(
+				parts[1],
+				func(token *jwt.Token) (any, error) {
+					return app.config.auth.jwtSecret, nil
+				},
+				jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
+			)
+
+			if err != nil {
+				AuthError(w)
+				return
+			}
+
+			sub, err := token.Claims.GetSubject()
+
+			if err != nil {
+				AuthError(w)
+				return 
+			}
+
+			userId, err := strconv.Atoi(sub)
+
+			if err != nil {
+				AuthError(w)
+				return 
+			}
+
+			ctx := authContextKey.Set(
+				r.Context(), 
+				authContextValue{
+					UserID: int64(userId),
+				})
+
+				next.ServeHTTP(w, r.WithContext(ctx))
+
+			})
 		}
-
-		//do some verification with the parts[1] aka the jwt string token
-    token, err := jwt.Parse(
-			parts[1],
-			func(token *jwt.Token) (any, error) {
-				return app.config.auth.jwtSecret, nil
-			},
-			jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
-		)
-
-    if err != nil {
-      return 
-    }
-
-    sub, err := token.Claims.GetSubject()
-
-    if err != nil {
-      return 
-    }
-
-    userId, err := strconv.Atoi(sub)
-
-    if err != nil {
-      return 
-    }
-
-    ctx := authContextKey.Set(
-      r.Context(), 
-      authContextValue{
-        UserID: int64(userId),
-    })
-
-    next.ServeHTTP(w, r.WithContext(ctx))
-
-	})
-}

@@ -16,18 +16,20 @@ func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 	err := jsonutils.Read(w, r, &payload)
 
 	if err != nil {
-		http.Error(w, "Invalid Payload", http.StatusNotAcceptable)
+		RequestError(w, "Invalid Payload")
 		return
 	}
 
 	postID, err := strconv.Atoi(r.PathValue("postID")) 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		InternalError(w, err)
+		return
 	}
 
 	ctxValue, err := authContextKey.Get(r.Context())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		InternalError(w, err)
+		return
 	}
 	comment := repository.Comment{
 		Content: payload.Content, 
@@ -37,8 +39,7 @@ func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 	//repository function create comment
 	err = app.store.Comments.Create(r.Context(), &comment)
 	if err != nil {
-		w.Write([]byte(err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
+		DBError(w)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
@@ -49,7 +50,7 @@ func (app *application) getCommentFeed(w http.ResponseWriter, r *http.Request) {
 
 	postID, err := strconv.ParseInt(r.PathValue("postID"), 10, 0)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		InternalError(w, err)
 		return
 	}
 
@@ -57,7 +58,7 @@ func (app *application) getCommentFeed(w http.ResponseWriter, r *http.Request) {
 
   feed, err := app.store.Comments.GetFeedByPostID(r.Context(), postID, feedAmt)
   if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
+		DBError(w)
     return
   }
 

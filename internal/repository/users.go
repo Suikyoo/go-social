@@ -32,7 +32,6 @@ func (r *SqlUserRepository) Get(ctx context.Context, id int64) (*User, error) {
   FROM users
   WHERE id = $1
   `
-
   user := User{}
 
   ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
@@ -102,14 +101,14 @@ func (r *SqlUserRepository) Create(ctx context.Context, user *User) error {
   ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
   defer cancel()
 
-  err := r.db.QueryRowContext(
-    ctx, 
-    query,
-    user.Username,
-    []byte(user.Password),
-  ).Scan(
-    &user.ID,
-  )
+	err := r.db.QueryRowContext(
+		ctx, 
+		query,
+		user.Username,
+		[]byte(user.Password),
+	).Scan(
+		&user.ID,
+	)
 
   if err != nil {
     return err

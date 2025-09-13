@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -15,18 +16,12 @@ type CreatePostPayload struct {
   Content string `json:"content"`
 }
 
-func (payload *CreatePostPayload) Scan(value authContextValue, w http.ResponseWriter, r *http.Request) error{
-
-  return nil
-}
-
 func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
-
 
   val, ok := r.Context().Value(authContextKey).(authContextValue)
 
   if !ok {
-    http.Error(w, "Auth Context value not found", http.StatusInternalServerError)
+		InternalError(w, errors.New("Auth Contenxt value not found"))
     return
   }
 
@@ -35,13 +30,13 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
   err := jsonutils.Read(w, r, &payload)
 
   if err != nil {
-    http.Error(w, "Invalid Payload", http.StatusNotAcceptable)
+		RequestError(w, "Invalid Payload")
+
     return
 
   }
 
   payload.UserID = val.UserID
-
 
   //create post item
   post := repository.Post{
@@ -54,7 +49,7 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
   err = app.store.Posts.Create(r.Context(), &post)
 
   if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
+		DBError(w)
     return
   }
 
@@ -66,14 +61,14 @@ func (app *application) getPost(w http.ResponseWriter, r *http.Request) {
   idKey := chi.URLParam(r, "id")
   id, err := strconv.Atoi(idKey)
   if err != nil {
-    http.Error(w, "User not found. Invalid ID", http.StatusBadRequest)
+		RequestError(w, "User not found. Invalid ID")
     return
   }
 
   post, err := app.store.Posts.Get(r.Context(), int64(id))
 
   if err != nil {
-    http.Error(w, "Database error", http.StatusInternalServerError)
+		DBError(w)
     return
 
   }
@@ -85,7 +80,7 @@ func (app *application) getPostFeed(w http.ResponseWriter, r *http.Request) {
   var feedAmt int8 = 20
   feed, err := app.store.Posts.GetFeed(r.Context(), feedAmt)
   if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
+		DBError(w)
     return
   }
 

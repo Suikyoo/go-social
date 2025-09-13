@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -35,14 +34,14 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	payload := ReceivedUserPayload{}
 	err := jsonutils.Read(w, r, &payload)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		RequestError(w, "Invalid Payload")
 		return
 	}
 
 	_, err = app.store.Users.GetByUsername(r.Context(), payload.Username)
 	//meaning, there is a result, (an account with the same username)
 	if err == nil {
-		http.Error(w, "Username already taken", http.StatusConflict)
+		RequestError(w, "Username already taken")
 		return
 	}
 
@@ -53,16 +52,11 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 
 	err = app.store.Users.Create(r.Context(), &user)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		DBError(w)
     return 
 	}
 
 	w.WriteHeader(http.StatusCreated)
-
-  _, err = w.Write([]byte("User successfully created"))
-  if err != nil {
-    log.Println("Response not sent", err.Error())
-  }
 
 }
 
@@ -70,14 +64,14 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 	userPayload := ReceivedUserPayload{}
 
 	if err := jsonutils.Read(w, r, &userPayload); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		RequestError(w, "Invalid Payload")
 		return
 	}
 
 	user, err := app.store.Users.GetByUsername(r.Context(), userPayload.Username)
 	//meaning, there is a result, (an account with the same username)
 	if err != nil {
-		http.Error(w, "No such user", http.StatusConflict)
+		RequestError(w, "No such user")
     return
 	}
 
@@ -85,7 +79,7 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 
   //if database user's password, is the same as the sent user's password,
   if !user.Password.Compare(&userPayload.Password){
-    http.Error(w, "Wrong password", http.StatusUnauthorized)
+		RequestError(w, "Wrong password")
     return
   }
 
@@ -97,7 +91,7 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
 
 	jwtString, err := token.SignedString(app.config.auth.jwtSecret)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		InternalError(w, err)
     return 
 
 	}
@@ -131,10 +125,5 @@ func (app *application) createToken(w http.ResponseWriter, r *http.Request) {
   }
   http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusCreated)
-
-  _, err = w.Write([]byte("Token successfully created"))
-  if err != nil {
-    log.Println("Response not sent", err.Error())
-  }
 
 }
