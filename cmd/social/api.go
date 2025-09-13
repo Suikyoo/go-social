@@ -58,7 +58,7 @@ func (app *application) Mount() http.Handler {
 	r.Route("/comments", func(r chi.Router) {
     r.Use(app.AuthTokenMiddleware)
 
-		r.Get("/", app.getCommentFeed)
+		r.Get("/{postID}", app.getCommentFeed)
 		r.Post("/{postID}", app.createComment)
 
 	})

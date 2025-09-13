@@ -19,8 +19,8 @@ type Comment struct {
 }
 
 type CommentRepository interface {
-  FeedRepository[Comment]
   CreateRepository[Comment]
+	GetFeedByPostID(context.Context, int64, int8) ([]*Comment, error)
 }
 
 type SqlCommentRepository struct {
@@ -29,13 +29,14 @@ type SqlCommentRepository struct {
 
 type TestCommentRepository struct {}
 
-func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Comment, error) {
+func (r *SqlCommentRepository) GetFeedByPostID(ctx context.Context, postID int64, amt int8) ([]*Comment, error) {
   query := `
   SELECT users.username, users.id, posts.id, comments.id, comments.content, comments.created_at, comments.updated_at
   FROM comments
   INNER JOIN users ON comments.user_id = users.id
   INNER JOIN posts ON comments.post_id = posts.id
-  LIMIT $1
+	WHERE posts.id = $1
+  LIMIT $2
   `
   ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
   defer cancel()
@@ -43,6 +44,7 @@ func (r *SqlCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Commen
   rows, err := r.db.QueryContext(
     ctx,
     query,
+		postID,
     amt,
   )
   if err != nil {
@@ -114,13 +116,7 @@ func (r *TestCommentRepository) Create(ctx context.Context, comment *Comment) er
 	return nil
 }
 
-func (r *TestCommentRepository) Get(ctx context.Context, id int64) (*Comment, error) {
-	log.Print("comment fetched")
-	return &Comment{}, nil
-
-}
-
-func (r *TestCommentRepository) GetFeed(ctx context.Context, amt int8) ([]*Comment, error) {
+func (r *TestCommentRepository) GetFeedByPostID(ctx context.Context, _ int64, amt int8) ([]*Comment, error) {
 	log.Print("comments fetched")
 	return append(make([]*Comment, 0), &Comment{}), nil
 }

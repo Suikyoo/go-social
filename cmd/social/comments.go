@@ -46,8 +46,16 @@ func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getCommentFeed(w http.ResponseWriter, r *http.Request) {
-  var feedAmt int8 = 20
-  feed, err := app.store.Comments.GetFeed(r.Context(), feedAmt)
+
+	postID, err := strconv.ParseInt(r.PathValue("postID"), 10, 0)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	feedAmt := int8(20)
+
+  feed, err := app.store.Comments.GetFeedByPostID(r.Context(), postID, feedAmt)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
