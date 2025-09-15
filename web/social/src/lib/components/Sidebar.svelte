@@ -14,12 +14,12 @@
   const menuItems: MenuItem[] = [
     {
       name: "Home",
-      href: "#/",
+      href: "/",
       icon: House,
     },
     {
       name: "Create",
-      href: "#/posts/create",
+      href: "/posts/create",
       icon: Plus,
     }
 

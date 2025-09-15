@@ -22,8 +22,8 @@
     }
     else {
       feedback.innerText = "succesfully signed in";
-      feedback.style.color = "green"
-      userProfile.username = user.username;
+      feedback.style.color = "green";
+      userProfile.set(user.username);
       authForm.setHidden();
     }
 

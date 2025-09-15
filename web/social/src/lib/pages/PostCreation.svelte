@@ -2,9 +2,9 @@
   import Input from "../components/Input.svelte";
   import TextArea from "../components/TextArea.svelte";
   import Button from "../components/Button.svelte";
-  import {type Post, createPost} from "../types/post"; 
+  import { type Post, createPost } from "../types/post"; 
 
-  import { pop } from "svelte-spa-router";
+  import { pop } from "@mateothegreat/svelte5-router";
 
   let post: Post = $state({title: "", content: ""});
   let feedback: HTMLParagraphElement | null = $state(null);

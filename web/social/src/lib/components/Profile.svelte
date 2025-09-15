@@ -8,14 +8,14 @@
 
 <script module>
   interface UserProfile extends User {
-
-    clear(): void;
+    set(value: string): void;
 
   }
   const userProfile: UserProfile = $state({
-    username: "",
-    clear() {
-      this.username = "";
+    username: localStorage.getItem("username") || "",
+    set: (value) => {
+      localStorage.setItem("username", value);
+      userProfile.username = value;
     }
   });
   export { userProfile };
@@ -24,7 +24,7 @@
 
 {#if userProfile.username.length != 0}
     <div class="flex flex-row justify-between">
-      <button onclick={() => userProfile.clear()}>Log out</button>
+      <button onclick={() => {userProfile.set("")}}>Log out</button>
       |
       <p>{userProfile.username}</p>
         <!-- add image -->
