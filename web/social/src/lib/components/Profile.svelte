@@ -8,12 +8,13 @@
 
 <script module>
   interface UserProfile extends User {
-    set(value: string): void;
+    setUsername(value: string): void;
 
   }
+  //do not set ID as the cookie already contains the user_id
   const userProfile: UserProfile = $state({
     username: localStorage.getItem("username") || "",
-    set: (value) => {
+    setUsername: (value) => {
       localStorage.setItem("username", value);
       userProfile.username = value;
     }
@@ -24,7 +25,7 @@
 
 {#if userProfile.username.length != 0}
     <div class="flex flex-row justify-between">
-      <button onclick={() => {userProfile.set("")}}>Log out</button>
+      <button onclick={() => {userProfile.setUsername(""); userProfile.setID("")}}>Log out</button>
       |
       <p>{userProfile.username}</p>
         <!-- add image -->

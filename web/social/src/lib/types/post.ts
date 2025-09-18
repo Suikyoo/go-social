@@ -1,7 +1,7 @@
 import { fetchGetFunct, fetchPostFunct } from "../fetch/fetch";
 
 export interface Post {
-  id: string;
+  id?: string;
   title: string;
   content: string;
   user_id?: string;
@@ -21,7 +21,7 @@ export async function fetchPost(id: string): Promise<Post | null> {
   return await funct(null)
 }
 
-export async function createPost(post: Post): Promise<Error> | null {
+export async function createPost(post: Post): Promise<Error | null> {
   const func = fetchPostFunct<Post>("/posts");
   let res = await func(post);
 

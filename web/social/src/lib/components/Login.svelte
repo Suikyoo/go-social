@@ -23,7 +23,7 @@
     else {
       feedback.innerText = "succesfully signed in";
       feedback.style.color = "green";
-      userProfile.set(user.username);
+      userProfile.setUsername(user.username);
       authForm.setHidden();
     }
 
@@ -41,8 +41,8 @@
 
     <div class="box-border px-7 pt-4 bg-inherit">
 
-      <Input name="Username" type="text" bind:value={user.username} className="h-[3.7em]"/>
-      <Input name="Password" type="password" bind:value={user.password} className="h-[3.7em]"/>
+      <Input name="Username" type="text" bind:value={user.username} className="h-[3.7em]" nativeClass="border-1 border-zinc-500"/>
+      <Input name="Password" type="password" bind:value={user.password} className="h-[3.7em]" nativeClass="border-1 border-zinc-500"/>
         <!--
       {@render input_field('Username', 'text')}
       {@render input_field('Password', 'password')}

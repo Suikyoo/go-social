@@ -10,6 +10,7 @@ import (
 
 type createCommentPayload struct {
 	Content string `json:"content"`;
+	PostID string `json:"post_id"`;
 }
 func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 	payload := createCommentPayload{}
@@ -20,10 +21,9 @@ func (app *application) createComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	postID, err := strconv.Atoi(r.PathValue("postID")) 
+	postID, err := strconv.Atoi(payload.PostID)
 	if err != nil {
 		InternalError(w, err)
-		return
 	}
 
 	ctxValue, err := authContextKey.Get(r.Context())
